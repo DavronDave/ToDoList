@@ -1,0 +1,47 @@
+﻿@model IEnumerable<todo_domain_entities.Models.ToDoItem>
+
+<h3 class="header text-center text-white glyphicon glyphicon-circle-arrow-up">@ViewBag.message</h3>
+<a class="content-btn btn " asp-route-defaultCatId="@ViewBag.defaultCatId" asp-action="Create" asp-route-returnUrl="@Context.Request.PathAndQuery()">
+    Add new task
+</a>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Due Date</th>
+            <th>Creation Date</th>
+            <th>Status</th>
+            <th>Category</th>
+            <th>Edit/Delete</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Title</td>
+                <td>@item.Description</td>
+                <td>@item.DueDate.ToString("MM.dd.yyyy  H:mm")</td>
+                <td>@item.CreationDate.ToString("MM.dd.yyyy  H:mm")</td>
+                <td>@item.GetStatus</td>
+                <td>@item.Category.Name</td>
+
+                <td>
+                    <form method="post" asp-action="Delete">
+                        <input type="hidden" name="id" value="@item.id" />
+                        <input type="hidden" value="@Context.Request.PathAndQuery()" name="returnUrl" />
+                        <a class="btn btn-primary" asp-route-id="@item.id" asp-route-returnUrl="@Context.Request.PathAndQuery()"
+                           asp-action="Edit">Edit</a>
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+        <tr class="onlychild text-center">
+            <td colspan="8">No data</td>
+        </tr>
+    </tbody>
+</table>
+

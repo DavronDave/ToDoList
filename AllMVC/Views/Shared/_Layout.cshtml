@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" asp-href-include="~/lib/bootstrap/" />
+    <link rel="stylesheet" href="~/css/Site.css" asp-append-version="true" />
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <link  asp-href-include="~/fontawesome/css/*.min.css" asp-append-version="true" rel="stylesheet" />
+    <title>@ViewBag.Title</title>
+</head>
+<body>
+    <div class="navbar"></div>
+    <div class="col-2 sidebar">
+        <i class="bi bi-list"></i>
+        <ul class="sidebar__list">
+            <li><a asp-action="Today" class="sidebar__link @(ViewBag.page=="today"?"sidebar__link2":"") ">Today</a></li>
+            <li><a asp-action="All" class="sidebar__link @(ViewBag.page=="all"?"sidebar__link2":"") ">Tasks</a></li>
+            <li><a asp-action="Index" class="sidebar__link @(ViewBag.page=="show"?"sidebar__link2":"") ">Showed items</a></li>
+            <li><a asp-action="Hide" class="sidebar__link @(ViewBag.page=="hide"?"sidebar__link2":"") ">Hidden items </a></li>
+            <li style="font-weight:bold; margin:0px; font-size:20px;">Categories</li>
+            @foreach (var c in ViewBag.Categories as IEnumerable<Category>)
+            {
+                if (ViewBag.catId == c.id)
+                {
+                    <li>
+                        <form method="post" asp-action="ChangeCategory" id="category-editing">
+                            <input type="hidden" value="@Context.Request.PathAndQuery()" name="returnUrl" />
+                            <input type="text" name="catName" class="category-name-area" value="@c.Name" />
+                            <input type="hidden" name="id" value="@c.id" />
+                            <button type="submit" class="catBtn btn-update">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
+                            <button type="reset" class="catBtn"><i class="fa-solid fa-arrow-rotate-left"></i></button>
+                            <input type="hidden" value="@Context.Request.PathAndQuery()" name="returnUrl" />
+                            <input type="hidden" name="id" value="@c.id" />
+                            <button type="submit" form="category-editing" formmethod="post" asp-action="DeleteCategory" class="catBtn" style="color:red">
+                                <i class=" fa-solid fa-trash-can"></i>
+                            </button>
+                        </form> 
+                    </li>
+                }
+                else
+                {
+                <li><a asp-action="GetByCategory" asp-route-id="@c.id" style="text-decoration:none; color:white; font-size:18px; margin-top:10px; margin-bottom:0px; margin-left:10px"> @c.Name</a></li>
+                }
+            }
+        </ul>
+    </div>p
+    <div class="content" style="">
+        @RenderBody()
+    </div>
+</body>
+</html>
